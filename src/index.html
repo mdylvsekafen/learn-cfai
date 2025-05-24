@@ -63,14 +63,15 @@
             margin-bottom: 1rem;
             text-align: center;
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .image-container {
             width: 100%;
-            max-width: 500px;
-            height: 350px;
+            max-width: 600px;
+            height: 480px;
             border-radius: 10px;
             margin-bottom: 1rem;
             background-color: rgba(0, 0, 0, 0.05);
@@ -546,8 +547,7 @@
                 'comic,bestquality, masterpiece, super details, fine fabrics, highly detailed eyes and face, extremely fine and detailed, perfect details, 1 girl, solo, long hair, bangs, rosy cheeks, pearl hair clips, strawberry blonde tresses, strawberry-shaped stud earrings, sweet lolita-style dress with berry prints, holding a basket of fresh strawberries, whimsical garden setting, sunny and bright',
                 '(comic),a girl, soft colors, long curly hair, ocean blue hair, delicate flower crown, shimmering hazel eyes, gentle smile, bohemian style dress, sunny beach background, headshot',
                 'bestquality, masterpiece, super details, fine fabrics, high detailed eyes and detailed face, comic, extremely fine and detailed, perfect details, 1girl, solo, long hair, bangs, rose pink eyes, long sleeves, frilly pastel dress, lace accessory, sweet smile, holding a pink macaron, cotton candy pink hair, hair ribbons, soft pink and white dress, fairy tale garden, pink flowers, balloons',
-
-
+                'cyberpunk cat'
             ];
 
             // 随机选择一个提示词
@@ -842,11 +842,9 @@
                 </div>
             </div>
             <select id="model">
-                <option value="dreamshaper-8-lcm">DreamShaper 8 LCM（容易出黑图）</option>
-                <option value="stable-diffusion-xl-base-1.0">Stable Diffusion XL Base 1.0（效果较好）</option>
+                <option selected value="stable-diffusion-xl-base-1.0">Stable Diffusion XL Base 1.0（效果较好）</option>
                 <option value="stable-diffusion-xl-lightning">Stable Diffusion XL Lightning（效果一般 速度快）</option>
-                <option selected value="flux-1-schnell">flux-1-schnell（推荐用这个）</option>
-                >
+                <option value="stable-diffusion-v1-5-inpainting">Stable Diffusion VL Inpainting </option>
             </select>
 
             <div class="input-group">
@@ -879,9 +877,6 @@
                 <button class="history-btn" id="historyBtn" type="button">历史记录</button>
             </div>
             <footer class="footer">
-                </br></br>
-                <p>前端来自佬友小黑紫一枚：<a href="https://linux.do/u/jiu1/" target="_blank">https://linux.do/u/jiu1/</a>
-                </p>
                 <p>项目部署于：<a href="https://workers.cloudflare.com/" target="_blank">Cloudflare Workers</a></p>
             </footer>
         </div>

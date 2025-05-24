@@ -1,7 +1,7 @@
 import HTML from './index.html';
 
 export default {
-  async fetch(request, env) {
+  async fetch(request: { headers: { get: (arg0: string) => any; }; method: string; json: () => any; }, env: { AI: { run: (arg0: string, arg1: { prompt: any; }) => any; }; }) {
     const originalHost = request.headers.get("host");
 
     // 设置CORS头部
@@ -25,7 +25,7 @@ export default {
       const data = await request.json();
       const upload = data.upload ?? false;  // 由后端直接上传到图床，解决奇奇怪怪的网络问题
 
-      let model = '@cf/black-forest-labs/flux-1-schnell'; // 默认模型
+      let model = '@cf/stabilityai/stable-diffusion-xl-base-1.0'; // 默认模型
 
       // 检查 prompt 是否存在
       if (!('prompt' in data) || data.prompt.trim() === '') {
@@ -35,17 +35,14 @@ export default {
       // 检查 model 是否存在，如果没有则使用默认模型
       if ('model' in data) {
         switch (data.model) {
-          case 'dreamshaper-8-lcm':
-            model = '@cf/lykon/dreamshaper-8-lcm';
-            break;
           case 'stable-diffusion-xl-base-1.0':
             model = '@cf/stabilityai/stable-diffusion-xl-base-1.0';
             break;
           case 'stable-diffusion-xl-lightning':
             model = '@cf/bytedance/stable-diffusion-xl-lightning';
             break;
-          case 'flux-1-schnell':
-            model = '@cf/black-forest-labs/flux-1-schnell';
+          case 'stable-diffusion-v1-5-inpainting':
+            model = '@cf/runwayml/stable-diffusion-v1-5-inpainting';
             break;
           default:
             break;
@@ -125,7 +122,7 @@ export default {
         //处理其他模型
         if (upload) {
           //把返回的stream转化为blob
-          async function convertReadableStreamToBlob(readableStream) {
+          async function convertReadableStreamToBlob(readableStream: BodyInit | null | undefined) {
             try {
               // 将 ReadableStream 转换为 Blob
               const response = new Response(readableStream);
@@ -186,7 +183,7 @@ export default {
 };
 
 // 将 Base64 图片数据转换为 Blob
-async function base64ToBlob(base64) {
+async function base64ToBlob(base64: string) {
   const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
   const byteString = atob(base64Data);
   const arrayBuffer = new ArrayBuffer(byteString.length);
@@ -198,7 +195,7 @@ async function base64ToBlob(base64) {
 }
 
 // 上传图片到图床
-async function uploadToImageHost(blob) {
+async function uploadToImageHost(blob: Blob) {
   const formData = new FormData();
   formData.append('file', blob, 'image.png');
 
