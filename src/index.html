@@ -706,11 +706,11 @@
                     let img = document.getElementById('aiImage');
                     img.onload = function (e) {
                         // 元素的onload 事件触发后将销毁URL对象, 释放内存。
-                        window.URL.revokeObjectURL(img.src)
+                        window.URL.revokeObjectURL(img.src);
                     }
                     // 浏览器允许使用URL.createObjectURL()方法，针对 Blob 对象生成一个临时 URL。
                     // 这个 URL 以blob://开头,表明对应一个 Blob 对象。
-                    img.src = window.URL.createObjectURL(imgData)
+                    img.src = window.URL.createObjectURL(new Blob([imgData], { 'type': 'image/png' }));
                     // updateHistory(prompt, imageUrl);
                     downloadBtn.style.display = 'block';
                 } catch (error) {
