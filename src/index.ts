@@ -219,4 +219,4 @@ async function uploadToImageHost(blob) {
     console.error(error); // 记录错误信息
     return null;
   }
-} satisfies ExportedHandler<Env>;
+}
