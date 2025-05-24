@@ -747,15 +747,27 @@
                 generateImage(promptInput.value.trim(), document.getElementById('width-input').value, document.getElementById('height-input').value);
             });
 
-            downloadBtn.addEventListener('click', function () {
-                const image = document.getElementById('aiImage');
+            downloadBtn.addEventListener('click', async function () {
+                const img = document.getElementById('aiImage');
+
+                let canvas = document.createElement('canvas');
+                canvas.width = img.clientWidth;
+                canvas.height = img.clientHeight;
+
+                let context = canvas.getContext('2d');
+                context.drawImage(img, 0, 0);
+
+                let blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
                 const link = document.createElement('a');
-                link.href = image.src;
                 link.download = `ai-artwork-${new Date().toISOString()}.png`;
-                document.body.appendChild(link);
+                console.log(index + " downloaded");
+                link.href = URL.createObjectURL(blob);
                 link.click();
-                document.body.removeChild(link);
+
+                URL.revokeObjectURL(link.href);
             });
+
             historyBtn.onclick = function () {
                 modal.style.display = 'block';
                 renderHistory();
