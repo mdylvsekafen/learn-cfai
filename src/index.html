@@ -690,25 +690,28 @@
                         body: JSON.stringify({
                             'model': model,
                             'prompt': prompt,
-                            'resolution': resolution,
-                            'upload': true
+                            'width': resolution.width,
+                            'height': resolution.height,
                         }),
-                        signal: signal
+                        signal: signal,
+                        responseType: 'blob'
                     });
 
                     if (!response.ok) {
                         throw new Error(`请求失败：${response.status} ${response.statusText}`);
                     }
-                    // 由于历史记录功能，本地保存历史生成的图片会超过浏览器限额，所以使用图床存储历史记录
-                    // 后期可能设一个开关，如果关闭开关就不上传到图床
-                    const responseData = await response.json();
-                    // 上传改为服务器端上传，返回一个图床路径
-                    // 提取 imageUrl
-                    const imageUrl = responseData.imageUrl;
 
-                    document.getElementById('aiImage').src = imageUrl;
-                    // document.getElementById('aiImage').src = Image;
-                    updateHistory(prompt, imageUrl);
+                    const imgData = response.data;
+
+                    let img = document.getElementById('aiImage');
+                    img.onload = function (e) {
+                        // 元素的onload 事件触发后将销毁URL对象, 释放内存。
+                        window.URL.revokeObjectURL(img.src)
+                    }
+                    // 浏览器允许使用URL.createObjectURL()方法，针对 Blob 对象生成一个临时 URL。
+                    // 这个 URL 以blob://开头,表明对应一个 Blob 对象。
+                    img.src = window.URL.createObjectURL(imgData)
+                    // updateHistory(prompt, imageUrl);
                     downloadBtn.style.display = 'block';
                 } catch (error) {
                     if (error.name === 'AbortError') {

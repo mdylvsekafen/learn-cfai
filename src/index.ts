@@ -1,7 +1,7 @@
 import HTML from './index.html';
 
 export default {
-  async fetch(request: { headers: { get: (arg0: string) => any; }; method: string; json: () => any; }, env: { AI: { run: (arg0: string, arg1: { prompt: any; }) => any; }; }) {
+  async fetch(request: { headers: { get: (arg0: string) => any; }; method: string; json: () => any; }, env: { AI: { run: (arg0: string, arg1: { prompt: any; width: any; height: any; num_steps: number; }) => any; }; }) {
     const originalHost = request.headers.get("host");
 
     // 设置CORS头部
@@ -23,7 +23,6 @@ export default {
     if (request.method === 'POST') {
       // 处理 POST 请求，用于 AI 绘画功能
       const data = await request.json();
-      const upload = data.upload ?? false;  // 由后端直接上传到图床，解决奇奇怪怪的网络问题
 
       let model = '@cf/stabilityai/stable-diffusion-xl-base-1.0'; // 默认模型
 
@@ -50,17 +49,11 @@ export default {
       }
 
       let inputs = {
-        prompt: data.prompt.trim()
+        prompt: data.prompt.trim(),
+        width: data.width ?? 1024,
+        height: data.height ?? 1024,
+        num_steps: 8,
       };
-
-      // 如果模型不是 flux-1-schnell, 则添加 width 和 height
-      if (model !== '@cf/black-forest-labs/flux-1-schnell') {
-        inputs.width = data.resolution?.width ?? 1024;
-        inputs.height = data.resolution?.height ?? 1024;
-      } else {
-        // 反之添加 num_steps
-        inputs.num_steps = 8; // 默认值
-      }
 
       const response = await env.AI.run(model, inputs);
 
@@ -68,7 +61,7 @@ export default {
       return new Response(response, {
         headers: {
           ...corsHeaders,
-          'content-type': 'image/png;base64',
+          'content-type': 'image/png',
         },
       });
 
@@ -83,17 +76,4 @@ export default {
       });
     }
   }
-};
-
-// 将 Base64 图片数据转换为 Blob
-async function base64ToBlob(base64: string) {
-  const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
-  const byteString = atob(base64Data);
-  const arrayBuffer = new ArrayBuffer(byteString.length);
-  const uint8Array = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++) {
-    uint8Array[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([uint8Array], { type: 'image/png' });
 }
-
