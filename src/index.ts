@@ -61,7 +61,7 @@ export default {
       return new Response(response, {
         headers: {
           ...corsHeaders,
-          'content-type': 'image/png',
+          'content-type': 'image/png;base64',
         },
       });
 

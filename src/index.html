@@ -6,7 +6,7 @@
     <title>AI绘画</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta content="使用先进的AI技术，轻松创作独特的数字艺术作品。探索无限可能，释放你的创意潜能。" name="description">
-    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="AI绘画" name="apple-mobile-web-app-title">
     <style>
@@ -694,16 +694,15 @@
                             'height': resolution.height,
                         }),
                         signal: signal,
-                        responseType: 'blob'
                     });
 
-                    console.log(response)
+                    // console.log(response)
 
                     if (!response.ok) {
                         throw new Error(`请求失败：${response.status} ${response.statusText}`);
                     }
 
-                    const imgData = response.data;
+                    const blob = await response.blob();
 
                     let img = document.getElementById('aiImage');
                     img.onload = function (e) {
@@ -712,7 +711,7 @@
                     }
                     // 浏览器允许使用URL.createObjectURL()方法，针对 Blob 对象生成一个临时 URL。
                     // 这个 URL 以blob://开头,表明对应一个 Blob 对象。
-                    img.src = window.URL.createObjectURL(new Blob([imgData], { 'type': 'image/png' }));
+                    img.src = window.URL.createObjectURL(blob);
                     // updateHistory(prompt, imageUrl);
                     downloadBtn.style.display = 'block';
                 } catch (error) {
