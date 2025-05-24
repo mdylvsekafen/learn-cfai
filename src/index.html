@@ -761,7 +761,6 @@
 
                 const link = document.createElement('a');
                 link.download = `ai-artwork-${new Date().toISOString()}.png`;
-                console.log(index + " downloaded");
                 link.href = URL.createObjectURL(blob);
                 link.click();
 
